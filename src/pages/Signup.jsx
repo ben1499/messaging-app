@@ -51,7 +51,7 @@ function Signup() {
           <Stack spacing={2} width={400}>
             <Typography variant="h4" sx={{ fontWeight: 'bold', pb: 4}}>Messaging App</Typography>
             <Typography variant="h3">Sign up</Typography>
-            <Typography sx={{ margin: '5px !important' }}>Already have an account? <Link to="/signup">Login</Link></Typography>
+            <Typography sx={{ margin: '5px !important' }}>Already have an account? <Link to="/login">Login</Link></Typography>
             <TextField label="First Name" name="first_name" onChange={handleModelChange} value={model.first_name} required />
             <TextField label="Last Name" name="last_name" onChange={handleModelChange} value={model.last_name} required />
             <TextField label="Email" name="email" onChange={handleModelChange} type="email" value={model.email} required />
