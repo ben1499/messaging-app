@@ -3,11 +3,22 @@ import { Link, useNavigate } from "react-router-dom";
 import bgImage from "../assets/bg.webp"
 import { useState } from "react";
 import axios from "axios";
+import { styled } from "@mui/material";
+import { Info } from "@mui/icons-material";
+
+const StyledInfo = styled(Box)(() => ({
+  display: "flex",
+  alignItems: "center",
+  gap: "2px",
+  color: "red",
+  marginLeft: "-10px"
+}));
 
 function Signup() {
   const url = import.meta.env.VITE_API_URL;
 
   const navigate = useNavigate();
+  const [errors, setErrors] = useState([]);
 
   const [model, setModel] = useState({
     first_name: "",
@@ -23,9 +34,17 @@ function Signup() {
     .then(() => {
       navigate("/login");
     }).catch((err) => {
+      if (err.response.data) {
+        setErrors(err.response.data.errors);
+      }
       console.log(err);
     })
   }
+
+  const firstNameError = errors?.find((error) => error.path === "first_name");
+  const lastNameError = errors?.find((error) => error.path === "last_name");
+  const emailError = errors?.find((error) => error.path === "email");
+  const passwordError = errors?.find((error) => error.path === "password");
 
   const handleModelChange = (e) => {
     switch(e.target.name) {
@@ -52,10 +71,40 @@ function Signup() {
             <Typography variant="h4" sx={{ fontWeight: 'bold', pb: 4}}>Messaging App</Typography>
             <Typography variant="h3">Sign up</Typography>
             <Typography sx={{ margin: '5px !important' }}>Already have an account? <Link to="/login">Login</Link></Typography>
-            <TextField label="First Name" name="first_name" onChange={handleModelChange} value={model.first_name} required />
-            <TextField label="Last Name" name="last_name" onChange={handleModelChange} value={model.last_name} required />
-            <TextField label="Email" name="email" onChange={handleModelChange} type="email" value={model.email} required />
-            <TextField label="Password" name="password" onChange={handleModelChange} type="password" value={model.password} required />
+            <TextField 
+              label="First Name" 
+              name="first_name" 
+              onChange={handleModelChange} 
+              value={model.first_name} 
+              required
+              helperText={firstNameError && <StyledInfo component="span"><Info fontSize="small" />{firstNameError.msg}</StyledInfo>} 
+            />
+            <TextField 
+              label="Last Name" 
+              name="last_name" 
+              onChange={handleModelChange} 
+              value={model.last_name} 
+              required
+              helperText={lastNameError && <StyledInfo component="span"><Info fontSize="small" />{lastNameError.msg}</StyledInfo>} 
+            />
+            <TextField 
+              label="Email" 
+              name="email" 
+              onChange={handleModelChange} 
+              type="email" 
+              value={model.email} 
+              required 
+              helperText={emailError && <StyledInfo component="span"><Info fontSize="small" />{emailError.msg}</StyledInfo>} 
+            />
+            <TextField 
+              label="Password" 
+              name="password" 
+              onChange={handleModelChange} 
+              type="password" 
+              value={model.password} 
+              required
+              helperText={passwordError && <StyledInfo component="span"><Info fontSize="small" />{passwordError.msg}</StyledInfo>} 
+            />
             <Button type="submit" variant="contained">Sign up</Button>
           </Stack>
         </form>
