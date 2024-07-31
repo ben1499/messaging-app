@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -17,12 +17,17 @@ function Router() {
     },
     {
       path: "/",
-      element: <Layout />,
+      element: <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>,
       children: [
+        {
+          index: true,
+          element: <Navigate to="/home" replace />
+        },
         {        
           path: "home",
           element: <Home />,
-          index: true
         }
       ]
     }
