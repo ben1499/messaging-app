@@ -34,8 +34,8 @@ function Layout() {
   }
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <div style={{ width: '90px', height: "100vh", backgroundColor: "#8C3061", display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
+    <Box sx={{ display: "grid", gridTemplateColumns: "90px 450px 1fr" }}>
+      <div style={{ width: '', height: "100vh", backgroundColor: "#8C3061", display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
         <Stack sx={{ px: 2, py: 2}}>
           <img src={Logo} width="50" alt="" />
           <Box sx={{ mt: 2, borderTop: '2px solid #4535C1' }} />
@@ -56,9 +56,9 @@ function Layout() {
           </Box>
         </Stack>
       </div>
-      <div>
+      {/* <div style={{width: "80%"}}> */}
         <Outlet />
-      </div>
+      {/* </div> */}
     </Box>
   )
 }
