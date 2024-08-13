@@ -84,7 +84,6 @@ function Chat({ user }) {
         to_user_id: user._id
       }
     }).then((res) => {
-      console.log(res.data.data);
       setMessages(res.data.data);
     })
   }, [url, user]);
@@ -116,7 +115,7 @@ function Chat({ user }) {
     axiosInstance.post(`${url}/messages`, {
       content: input,
       to_user_id: user._id
-    }).then((res) => {
+    }).then(() => {
       setInput("");
       fetchMessages();
     }).catch((err) => console.log(err));
@@ -145,7 +144,7 @@ function Chat({ user }) {
   const deleteMessage = (id) => {
     return () => {
       axiosInstance.delete(`${url}/messages/${id}`)
-      .then((res) => {
+      .then(() => {
         setSnackMessage("Message deleted");
         setSnackVisible(true);
         fetchMessages();

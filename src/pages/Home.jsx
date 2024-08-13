@@ -35,7 +35,6 @@ function Home() {
   useEffect(() => {
     axiosInstance.get(`${url}/users`)
     .then((res) => {
-      console.log(res);
       setUsers(res.data.data);
     })
   }, [url]);

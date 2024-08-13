@@ -129,7 +129,7 @@ function Profile() {
     }
     setSaveLoading(true);
     axiosInstance.put(`${url}/users/${user._id}`, formData)
-    .then((res) => {
+    .then(() => {
       setPreviewUrl(null);
       setDialogOpen(false);
       fetchUser();
