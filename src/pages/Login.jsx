@@ -53,6 +53,7 @@ function Login() {
     axios.post(`${url}/users/login`, model)
     .then((res) => {
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user_id", res.data.user_id);
       navigate("/home");
     }).catch((err) => {
       console.log(err.response);

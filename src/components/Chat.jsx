@@ -9,6 +9,7 @@ import TagFacesIcon from '@mui/icons-material/TagFaces';
 // import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import ArrowIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useNavigate } from "react-router-dom";
 
 const StyledImg = styled.img`
   border-radius: 50%;
@@ -68,6 +69,7 @@ const ChatInput = styled(Card)(() => ({
 
 function Chat({ user }) {
   const url = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
 
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -141,7 +143,6 @@ function Chat({ user }) {
   }
 
   const deleteMessage = (id) => {
-    console.log("come here");
     return () => {
       axiosInstance.delete(`${url}/messages/${id}`)
       .then((res) => {
@@ -156,6 +157,12 @@ function Chat({ user }) {
     }
   }
 
+  const openProfile = (id) => {
+    return () => {
+      return navigate(`/profile/${id}`);
+    }
+  }
+
   return (
     <Box sx={{ height: "100vh", display: "flex", flexDirection: "column", borderLeft: "1px solid rgb(212 212 216)", position: "relative" }}>
       <Snackbar
@@ -167,7 +174,7 @@ function Chat({ user }) {
       <Box sx={{ display: "flex", px: 2, py: 1, gap: "8px", borderBottom: "1px solid rgb(212 212 216)" }}>
         <StyledImg src={user.image ? user.image.url : PersonImg} alt="" />
         <Box>
-          <Typography variant="p">{`${user.first_name} ${user.last_name}`}</Typography>
+          <Typography variant="p" sx={{ cursor: "pointer", "&:hover": { color: "#4E31AA"} }} onClick={openProfile(user._id)}>{`${user.first_name} ${user.last_name}`}</Typography>
           <Typography variant="p" sx={{ display: "block", fontSize: "14px" }}>{user.email}</Typography>
         </Box>
       </Box>
