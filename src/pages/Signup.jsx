@@ -1,10 +1,10 @@
-import { Typography, Button, TextField, Stack, Box } from "@mui/material";
+import { Typography, Button, TextField, Stack, Box, FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import bgImage from "../assets/bg.webp"
 import { useState } from "react";
 import axios from "axios";
 import { styled } from "@mui/material";
-import { Info } from "@mui/icons-material";
+import { Info, Visibility, VisibilityOff } from "@mui/icons-material";
 
 const StyledInfo = styled(Box)(() => ({
   display: "flex",
@@ -19,6 +19,7 @@ function Signup() {
 
   const navigate = useNavigate();
   const [errors, setErrors] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [model, setModel] = useState({
     first_name: "",
@@ -27,9 +28,11 @@ function Signup() {
     password: ""
   })
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setLoading(true);
     axios.post(`${url}/users/signup`, model)
     .then(() => {
       navigate("/login");
@@ -38,7 +41,7 @@ function Signup() {
         setErrors(err.response.data.errors);
       }
       console.log(err);
-    })
+    }).finally(() => setLoading(true));
   }
 
   const firstNameError = errors?.find((error) => error.path === "first_name");
@@ -61,6 +64,10 @@ function Signup() {
         setModel({...model, password: e.target.value});
         break;
     }
+  }
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
   }
 
   return (
@@ -100,12 +107,23 @@ function Signup() {
               label="Password" 
               name="password" 
               onChange={handleModelChange} 
-              type="password" 
+              type={showPassword ? "text" : "password"}
               value={model.password} 
               required
               helperText={passwordError && <StyledInfo component="span"><Info fontSize="small" />{passwordError.msg}</StyledInfo>} 
+              InputProps={{
+              endAdornment: (<InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={toggleShowPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>)
+              }}
             />
-            <Button type="submit" variant="contained">Sign up</Button>
+            <Button type="submit" variant="contained" disabled={loading}>Sign up</Button>
           </Stack>
         </form>
       </Box>

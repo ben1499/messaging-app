@@ -1,9 +1,9 @@
-import { Typography, Button, TextField, Stack, Box } from "@mui/material";
+import { Typography, Button, TextField, Stack, Box, IconButton, InputAdornment } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import bgImage from "../assets/bg.webp"
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Info } from "@mui/icons-material";
+import { Info, Visibility, VisibilityOff } from "@mui/icons-material";
 import { styled, Snackbar } from "@mui/material";
 
 const StyledInfo = styled(Box)(() => ({
@@ -27,6 +27,8 @@ function Login() {
 
   const [errors, setErrors] = useState([]);
   const [errorOpen, setErrorOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (location.state?.isRedirect) {
@@ -50,6 +52,7 @@ function Login() {
   const submitForm = (e) => {
     e.preventDefault();
     setErrors([]);
+    setLoading(true);
     axios.post(`${url}/users/login`, model)
     .then((res) => {
       localStorage.setItem("token", res.data.token);
@@ -60,11 +63,15 @@ function Login() {
       if (err.response.data) {
         setErrors(err.response.data.errors);
       }
-    });
+    }).finally(() => setLoading(false));
   }
 
   const handleErrorSnackClose = () => {
     setErrorOpen(false);
+  }
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
   }
 
   const emailError = errors?.find((error) => error.path === "email");
@@ -84,16 +91,28 @@ function Login() {
             <Typography variant="h4" sx={{ fontWeight: 'bold', pb: 4}}>Messaging App</Typography>
             <Typography variant="h3">Welcome Back</Typography>
             <Typography sx={{ margin: '5px !important' }}>New here? <Link to="/signup">Create an account</Link></Typography>
-            <TextField label="Email" name="email" type="email" helperText={emailError && <StyledInfo component="span"><Info fontSize="small" />{emailError.msg}</StyledInfo>} value={model.email} onChange={handleModelChange} />
+            <TextField label="Email" name="email" type="email" required helperText={emailError && <StyledInfo component="span"><Info fontSize="small" />{emailError.msg}</StyledInfo>} value={model.email} onChange={handleModelChange} />
             <TextField 
               label="Password" 
               name="password" 
-              type="password"
+              type={showPassword ? "text" : "password"}
+              required
               helperText={passwordError && <StyledInfo component="span"><Info fontSize="small" />{passwordError.msg}</StyledInfo>}
               value={model.password}  
               onChange={handleModelChange} 
+              InputProps={{
+                endAdornment: (<InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={toggleShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>)
+                }}
             />
-            <Button type="submit" variant="contained">Login</Button>
+            <Button type="submit" variant="contained" disabled={loading}>Login</Button>
           </Stack>
         </form>
       </Box>

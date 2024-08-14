@@ -10,6 +10,7 @@ import TagFacesIcon from '@mui/icons-material/TagFaces';
 import Picker from '@emoji-mart/react'
 import ArrowIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const StyledImg = styled.img`
   border-radius: 50%;
@@ -215,5 +216,9 @@ function Chat({ user }) {
     </Box>
   )
 }
+
+Chat.propTypes = {
+  user: PropTypes.object
+};
 
 export default Chat;
