@@ -1,5 +1,5 @@
 import Logo from "../assets/chat-logo.png";
-import { Stack, IconButton, Box, Tooltip } from "@mui/material";
+import { Stack, IconButton, Box, Tooltip, Snackbar } from "@mui/material";
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -17,6 +17,8 @@ function Layout() {
 
   const [profileData, setProfileData] = useState(null);
   const [layoutGridStyle, setLayoutGridStyle] = useState("90px 450px 1fr");
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState(null);
 
   useEffect(() => {
     if (location.pathname === "/home") {
@@ -31,6 +33,13 @@ function Layout() {
     .then((res) => {
       setProfileData(res.data.data);
     }).catch((err) => {
+      console.log(err);
+      if (!err.response || err.response.status !== 400) {
+        setSnackMessage("Something went wrong. Please try again.");
+        setSnackOpen(true);
+        navigate("/login");
+        return;
+      }
       if (err.response.status === 401 || err.response.status === 403) {
         navigate("/login", { state: { isRedirect: true } });
       }
@@ -49,8 +58,18 @@ function Layout() {
     return navigate("/login");
   }
 
+  const handleSnackClose = () => {
+    setSnackOpen(false);
+  }
+
   return (
     <Box sx={{ minHeight: "100vh", display: "grid", gridTemplateRows: { lg: "none", sm: "1fr 70px", xs: "1fr 70px" }, gridTemplateColumns: { lg: layoutGridStyle, sm: location.pathname === "/home" ? "none" : "none", xs: location.pathname === "/home" ? "none" : "none" } }}>
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackClose}
+        message={snackMessage}
+      />
       <Box sx={{ height: { lg: "100vh", sm: "10vh", xs: "8vh"}, backgroundColor: "#8C3061", display: "flex", flexDirection: { lg: "column", sm: "row", xs: "row"}, justifyContent: "space-between", alignItems: { lg: "", sm: "center", xs: "center"}, order: { lg: 0, sm: 1, xs: 1} }}>
         <Stack sx={{ px: 2, py: { lg: 2, sm: 0, xs: 0 }}} direction={{ lg: "column", xs: "row" }}>
           <img className="layout-logo" src={Logo} width={50} alt="" />

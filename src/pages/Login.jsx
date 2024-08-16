@@ -1,4 +1,4 @@
-import { Typography, TextField, Stack, Box, IconButton, InputAdornment, CircularProgress } from "@mui/material";
+import { Typography, TextField, Stack, Box, IconButton, InputAdornment } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import bgImage from "../assets/bg.webp"
 import { useState, useEffect } from "react";
@@ -28,13 +28,15 @@ function Login() {
   })
 
   const [errors, setErrors] = useState([]);
-  const [errorOpen, setErrorOpen] = useState(false);
+  const [snackOpen, setSnackOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [snackMessage, setSnackMessage] = useState(null);
 
   useEffect(() => {
     if (location.state?.isRedirect) {
-      setErrorOpen(true);
+      setSnackMessage("Please login to access account");
+      setSnackOpen(true);
       // To clear the isRedirect state
       navigate(".", { replace: true })
     }
@@ -61,15 +63,20 @@ function Login() {
       localStorage.setItem("user_id", res.data.user_id);
       navigate("/home");
     }).catch((err) => {
-      console.log(err.response);
+      console.log(err);
+      if (!err.response || err.response.status !== 400) {
+        setSnackMessage("Something went wrong. Please try again.");
+        setSnackOpen(true);
+        return;
+      }
       if (err.response.data) {
         setErrors(err.response.data.errors);
       }
     }).finally(() => setLoading(false));
   }
 
-  const handleErrorSnackClose = () => {
-    setErrorOpen(false);
+  const handleSnackClose = () => {
+    setSnackOpen(false);
   }
 
   const toggleShowPassword = () => {
@@ -82,45 +89,43 @@ function Login() {
   return (
     <Box sx={{ display: 'flex', height: '100vh', width: "100%" }}>
       <Snackbar
-        open={errorOpen}
+        open={snackOpen}
         autoHideDuration={3000}
-        onClose={handleErrorSnackClose}
-        message="Please login to access account"
+        onClose={handleSnackClose}
+        message={snackMessage}
       />
-      {/* <Box sx={{ width: "100%", display: 'flex', alignItems: 'center', m:0, p: 0 }} > */}
-        <form onSubmit={submitForm} className="form-container">
-          <Stack spacing={2} sx={{ width: {lg: 400, sm: 380, xs: 360} }}>
-            <Box sx={{ display: "flex", gap: "12px", alignItems: "center", pb: 4, justifyContent: { lg: "flex-start", sm: "center", xs: "center" } }}>
-              <div><img src={Logo} width="50" alt="" /></div>
-              <Typography variant="h4" sx={{ fontWeight: 'bold' }}>Messaging App</Typography>
-            </Box>
-            <Typography variant="h3" sx={{ fontSize: { lg: "42px", sm: "34px", xs: "32px" } }}>Welcome Back</Typography>
-            <Typography sx={{ margin: '5px !important' }}>New here? <Link to="/signup">Create an account</Link></Typography>
-            <TextField label="Email" name="email" type="email" required helperText={emailError && <StyledInfo component="span"><Info fontSize="small" />{emailError.msg}</StyledInfo>} value={model.email} onChange={handleModelChange} />
-            <TextField 
-              label="Password" 
-              name="password" 
-              type={showPassword ? "text" : "password"}
-              required
-              helperText={passwordError && <StyledInfo component="span"><Info fontSize="small" />{passwordError.msg}</StyledInfo>}
-              value={model.password}  
-              onChange={handleModelChange} 
-              InputProps={{
-                endAdornment: (<InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={toggleShowPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>)
-                }}
-            />
-            <LoadingButton type="submit" variant="contained" loadingPosition="start" loading={loading}>Login</LoadingButton>
-          </Stack>
-        </form>
-      {/* </Box> */}
+      <form onSubmit={submitForm} className="form-container">
+        <Stack spacing={2} sx={{ width: {lg: 400, sm: 380, xs: 360} }}>
+          <Box sx={{ display: "flex", gap: "12px", alignItems: "center", pb: 4, justifyContent: { lg: "flex-start", sm: "center", xs: "center" } }}>
+            <div><img src={Logo} width="50" alt="" /></div>
+            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>Messaging App</Typography>
+          </Box>
+          <Typography variant="h3" sx={{ fontSize: { lg: "42px", sm: "34px", xs: "32px" } }}>Welcome Back</Typography>
+          <Typography sx={{ margin: '5px !important' }}>New here? <Link to="/signup">Create an account</Link></Typography>
+          <TextField label="Email" name="email" type="email" required helperText={emailError && <StyledInfo component="span"><Info fontSize="small" />{emailError.msg}</StyledInfo>} value={model.email} onChange={handleModelChange} />
+          <TextField 
+            label="Password" 
+            name="password" 
+            type={showPassword ? "text" : "password"}
+            required
+            helperText={passwordError && <StyledInfo component="span"><Info fontSize="small" />{passwordError.msg}</StyledInfo>}
+            value={model.password}  
+            onChange={handleModelChange} 
+            InputProps={{
+              endAdornment: (<InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={toggleShowPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>)
+              }}
+          />
+          <LoadingButton type="submit" variant="contained" loadingPosition="start" loading={loading}>Login</LoadingButton>
+        </Stack>
+      </form>
       <Box className="welcome-bg-image">
         <img style={{ height: '99%', width: '100%' }} src={bgImage} alt="" />
       </Box>

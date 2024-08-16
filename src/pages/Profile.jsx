@@ -9,6 +9,7 @@ import {
   DialogActions, 
   Button, 
   TextField,
+  CircularProgress,
  } from "@mui/material";
 import { useEffect, useState } from "react";
 import axiosInstance from "../config/axios";
@@ -59,12 +60,15 @@ function Profile() {
   });
   const [previewUrl, setPreviewUrl] = useState(null);
   const [saveLoading, setSaveLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     axiosInstance(`${url}/users/${id}`)
     .then((res) => {
       setUser(res.data.data);
-    })
+    }).catch((err) => console.log(err))
+    .finally(() => setLoading(false));
   }, [url, id]);
 
   const openDialog = () => {
@@ -201,17 +205,23 @@ function Profile() {
           <Button type="submit" onClick={submitForm} disabled={saveLoading}>Save</Button>
         </DialogActions>
       </Dialog>
-      <Card sx={{ position: "relative", overflow: "visible", minWidth: "250px", width: "42%", paddingTop: "44px", paddingBottom: "14px" }}>
-        <StyledImg className="profile-card-img" src={user && user.image ? user.image.url : PersonImg}></StyledImg>
-        {user?.is_editable ? (
-          <IconButton sx={{ position: "absolute", right: "5px", top: "5px"}} onClick={openDialog}><EditIcon /></IconButton>
-        ) : null}
-        <Box sx={{ textAlign: "center" }}>
-          <Typography variant="h4">{`${user?.first_name} ${user?.last_name}`}</Typography>
-          <Typography variant="p">{user?.email}</Typography>
-          <Typography sx={{ mt: 2, fontWeight: "bold"}}>About</Typography>
-          <Typography>{ user?.about === "" || !user?.about ? "-" : user?.about }</Typography>
-        </Box>
+      <Card sx={{ position: "relative", overflow: "visible", minWidth: "250px", minHeight: "125px", width: "42%", paddingTop: "44px", paddingBottom: "14px" }}>
+        {loading ? <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <CircularProgress />
+        </Box> : (
+        <>
+          <StyledImg className="profile-card-img" src={user && user.image ? user.image.url : PersonImg}></StyledImg>
+          {user?.is_editable ? (
+            <IconButton sx={{ position: "absolute", right: "5px", top: "5px"}} onClick={openDialog}><EditIcon /></IconButton>
+          ) : null}
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="h4">{`${user?.first_name} ${user?.last_name}`}</Typography>
+            <Typography variant="p">{user?.email}</Typography>
+            <Typography sx={{ mt: 2, fontWeight: "bold"}}>About</Typography>
+            <Typography>{ user?.about === "" || !user?.about ? "-" : user?.about }</Typography>
+          </Box>
+        </>
+        )}
       </Card>
     </Box>
   )
