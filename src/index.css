@@ -13,3 +13,57 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+.profile-img-preview {
+  margin-top: 10px;
+  width: 325px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.layout-profile-img {
+  cursor: pointer;
+}
+
+.form-container {
+  display: flex;
+  align-items: center;
+  padding: 0 100px;
+}
+
+
+@media (max-width: 600px) {
+  .welcome-bg-image {
+    display: none;
+  }
+
+  .form-container {
+    /* text-align: center; */
+    height: 100%;
+    width: 80%;
+    text-align: center;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .profile-img-preview-container {
+    width: 200px !important;
+  }
+
+  .profile-img-preview {
+    width: 200px;
+  }
+
+  .profile-card-img {
+    left: 30% !important;
+  }
+
+  .layout-logo {
+    display: none;
+  }
+
+  .layout-profile-img {
+    height: 30px !important;
+    width: 30px !important;
+  }
+}

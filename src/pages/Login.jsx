@@ -1,10 +1,12 @@
-import { Typography, Button, TextField, Stack, Box, IconButton, InputAdornment } from "@mui/material";
+import { Typography, TextField, Stack, Box, IconButton, InputAdornment, CircularProgress } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import bgImage from "../assets/bg.webp"
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Info, Visibility, VisibilityOff } from "@mui/icons-material";
 import { styled, Snackbar } from "@mui/material";
+import Logo from "../assets/chat-logo.png";
+import { LoadingButton } from "@mui/lab";
 
 const StyledInfo = styled(Box)(() => ({
   display: "flex",
@@ -78,18 +80,21 @@ function Login() {
   const passwordError = errors?.find((error) => error.path === "password");
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', maxWidth: '100vw', px: 8 }}>
+    <Box sx={{ display: 'flex', height: '100vh', width: "100%" }}>
       <Snackbar
         open={errorOpen}
         autoHideDuration={3000}
         onClose={handleErrorSnackClose}
         message="Please login to access account"
       />
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <form onSubmit={submitForm}>
-          <Stack spacing={2} width={400}>
-            <Typography variant="h4" sx={{ fontWeight: 'bold', pb: 4}}>Messaging App</Typography>
-            <Typography variant="h3">Welcome Back</Typography>
+      {/* <Box sx={{ width: "100%", display: 'flex', alignItems: 'center', m:0, p: 0 }} > */}
+        <form onSubmit={submitForm} className="form-container">
+          <Stack spacing={2} sx={{ width: {lg: 400, sm: 380, xs: 360} }}>
+            <Box sx={{ display: "flex", gap: "12px", alignItems: "center", pb: 4, justifyContent: { lg: "flex-start", sm: "center", xs: "center" } }}>
+              <div><img src={Logo} width="50" alt="" /></div>
+              <Typography variant="h4" sx={{ fontWeight: 'bold' }}>Messaging App</Typography>
+            </Box>
+            <Typography variant="h3" sx={{ fontSize: { lg: "42px", sm: "34px", xs: "32px" } }}>Welcome Back</Typography>
             <Typography sx={{ margin: '5px !important' }}>New here? <Link to="/signup">Create an account</Link></Typography>
             <TextField label="Email" name="email" type="email" required helperText={emailError && <StyledInfo component="span"><Info fontSize="small" />{emailError.msg}</StyledInfo>} value={model.email} onChange={handleModelChange} />
             <TextField 
@@ -112,12 +117,12 @@ function Login() {
                   </InputAdornment>)
                 }}
             />
-            <Button type="submit" variant="contained" disabled={loading}>Login</Button>
+            <LoadingButton type="submit" variant="contained" loadingPosition="start" loading={loading}>Login</LoadingButton>
           </Stack>
         </form>
-      </Box>
-      <Box sx={{ maxHeight: '100vh'}}>
-        <img style={{height: '99%', width: '100%'}} src={bgImage} alt="" />
+      {/* </Box> */}
+      <Box className="welcome-bg-image">
+        <img style={{ height: '99%', width: '100%' }} src={bgImage} alt="" />
       </Box>
     </Box>
   )

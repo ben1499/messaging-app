@@ -35,6 +35,17 @@ function Home() {
   useEffect(() => {
     axiosInstance.get(`${url}/users`)
     .then((res) => {
+    // const arr = []
+    // for (let i = 0; i < 15; i++) {
+    //   arr.push({
+    //     id: i,
+    //     "first_name": "Jim",
+    //     "last_name": "Hansen",
+    //     "email": "jim@gmail.com",
+    //     "__v": 0
+    //   })
+    // }
+    // setUsers(arr);
       setUsers(res.data.data);
     })
   }, [url]);
@@ -50,11 +61,15 @@ function Home() {
     }
   }
 
+  const handleBack = () => {
+    setSelectedChat(null);
+  }
+
   return (
     <>
-      <Box sx={{ height: "100vh" }}>
+      <Box sx={{ display: { lg: "block", xs: selectedChat && "none" } }}>
         <Box sx={{ display: "flex", fontSize: "18px", alignItems: "center", gap: "6px", padding: "19.5px 0", px: 2, borderBottom: "1px solid rgb(212 212 216)" }}><ListIcon />Messages</Box>
-        <Box sx={{ }}>
+        <Box sx={{ height: { lg: "92vh", xs: "80vh"}, overflowY: "auto" }}>
           {users.length ? users.map((user) => (
             <StyledChatSelect key={user._id} onClick={openChat(user)} sx={{ backgroundColor: selectedChat?._id === user._id ? "#D1E9F6" : "" }}>
               <Box sx={{ display: "flex", alignItems: "center", gap: "6px"}}>
@@ -71,10 +86,10 @@ function Home() {
         </Box>
       </Box>
       {selectedChat ? (
-        <Chat user={selectedChat} />
+        <Chat user={selectedChat} onBack={handleBack} />
       ) : (
-      <Box sx={{ height: "100vh", backgroundColor: "rgb(239 241 242)" }}>
-        <Box sx={{ height: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+      <Box sx={{ backgroundColor: "rgb(239 241 242)", display: { lg: "block", xs: "none"} }}>
+        <Box sx={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
           <img src={Logo} width="80" alt="" />
           <Typography sx={{ fontWeight: "" }} variant="h3">Messaging app</Typography>
         </Box>

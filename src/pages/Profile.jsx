@@ -68,9 +68,10 @@ function Profile() {
   }, [url, id]);
 
   const openDialog = () => {
-    axiosInstance(`${url}/users/`)
+    axiosInstance(`${url}/users/${id}`)
     .then((res) => {
       const data = res.data.data;
+      console.log(data);
       setModel({
         first_name: data.first_name,
         last_name: data.last_name,
@@ -139,10 +140,12 @@ function Profile() {
   }
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", backgroundColor: "rgb(239 241 242)" }}>
+    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "rgb(239 241 242)", order: { lg: 1, sm: 0, xs: 0 } }}>
       <Dialog
         open={dialogOpen}
         onClose={closeDialog}
+        sx={{ textAlign: { lg: "left", xs: "center", sm: "center" } }}
+        maxWidth="xs"
       >
         <DialogTitle>Edit Profile</DialogTitle>
         <DialogContent>
@@ -184,9 +187,9 @@ function Profile() {
           />
           <Typography sx={{ mt: 2}}>Profile Picture *</Typography>
           {model.image || previewUrl ? (
-            <Box sx={{ position: "relative", width: "325px" }}>
-              <IconButton onClick={removeImage} sx={{ position: "absolute", right: "0", top: "0" }}><DeleteIcon sx={{ color: "red" }} /></IconButton>
-              <img src={model.image.url || previewUrl} width="325" alt="" />
+            <Box className="profile-img-preview-container" sx={{ position: "relative", width: "325px" }}>
+              <IconButton onClick={removeImage} sx={{ position: "absolute", right: "0", top: "5px", boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)" }}><DeleteIcon sx={{ color: "red" }} /></IconButton>
+              <img className="profile-img-preview" src={model.image.url || previewUrl} width="325" alt="" />
             </Box>
           ) : (<Button sx={{ mt: 1 }} component="label" variant="contained" tabIndex={-1} startIcon={<CloudUpload />}>
             Upload File
@@ -198,8 +201,8 @@ function Profile() {
           <Button type="submit" onClick={submitForm} disabled={saveLoading}>Save</Button>
         </DialogActions>
       </Dialog>
-      <Card sx={{ position: "relative", overflow: "visible", width: "42%", paddingTop: "44px", paddingBottom: "14px" }}>
-        <StyledImg src={user && user.image ? user.image.url : PersonImg}></StyledImg>
+      <Card sx={{ position: "relative", overflow: "visible", minWidth: "250px", width: "42%", paddingTop: "44px", paddingBottom: "14px" }}>
+        <StyledImg className="profile-card-img" src={user && user.image ? user.image.url : PersonImg}></StyledImg>
         {user?.is_editable ? (
           <IconButton sx={{ position: "absolute", right: "5px", top: "5px"}} onClick={openDialog}><EditIcon /></IconButton>
         ) : null}

@@ -9,6 +9,7 @@ import TagFacesIcon from '@mui/icons-material/TagFaces';
 // import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import ArrowIcon from '@mui/icons-material/KeyboardArrowDown';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
@@ -49,14 +50,13 @@ const StyledArrowIcon = styled(ArrowIcon)(() => ({
 }));
 
 const ChatInput = styled(Card)(() => ({
-  width: "95%",
   backgroundColor: "white",
   margin: "0 auto",
   padding: "6px 8px",
   position: "relative",
   zIndex: "2",
   opacity: "1 !important",
-  marginBottom: "16px",
+  // marginBottom: "16px",
   display: "flex",
   justifyContent: "center",
   gap: "10px",
@@ -68,7 +68,7 @@ const ChatInput = styled(Card)(() => ({
   }
 }));
 
-function Chat({ user }) {
+function Chat({ user, onBack }) {
   const url = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
@@ -164,7 +164,7 @@ function Chat({ user }) {
   }
 
   return (
-    <Box sx={{ height: "100vh", display: "flex", flexDirection: "column", borderLeft: "1px solid rgb(212 212 216)", position: "relative" }}>
+    <Box sx={{ height: { lg: "100vh", sm: "92vh", xs: "92vh" }, display: "flex", flexDirection: "column", borderLeft: "1px solid rgb(212 212 216)", position: "relative" }}>
       <Snackbar
         open={isSnackVisible}
         autoHideDuration={3000}
@@ -172,6 +172,7 @@ function Chat({ user }) {
         message={snackMessage}
       />
       <Box sx={{ display: "flex", px: 2, py: 1, gap: "8px", borderBottom: "1px solid rgb(212 212 216)" }}>
+        <IconButton onClick={onBack} sx={{ p: 0, display: { lg: "none"} }}><ArrowBackIcon /></IconButton>
         <StyledImg src={user.image ? user.image.url : PersonImg} alt="" />
         <Box>
           <Typography variant="p" sx={{ cursor: "pointer", "&:hover": { color: "#4E31AA"} }} onClick={openProfile(user._id)}>{`${user.first_name} ${user.last_name}`}</Typography>
@@ -194,7 +195,7 @@ function Chat({ user }) {
               <MetaInfo sx={{ alignSelf: message.is_current_user ? "flex-end" : "flex-start" }}>{ message.date_formatted}</MetaInfo>
               <ChatMsg 
                 sx={{ borderTopRightRadius: message.is_current_user ? "0px" : "", borderTopLeftRadius: message.is_current_user ? "" : "0px", backgroundColor: !message.is_current_user ? "#F8EDED" : "#FFEBD4" }}>
-                  <Box sx={{ maxInlineSize: "450px", overflowWrap: "break-word" }}>{message.content}</Box>
+                  <Box sx={{ maxInlineSize: { lg: "450px", sm: "250px", xs: "250px"}, overflowWrap: "break-word" }}>{message.content}</Box>
                   {message.is_current_user ? <StyledArrowIcon onClick={toggleMsgOptions(message._id)} /> : null }
               </ChatMsg>
               {selectedMsg === message._id ? (
@@ -206,7 +207,7 @@ function Chat({ user }) {
           ))}
         </Box>
         <form action="">
-          <ChatInput>
+          <ChatInput sx={{ width: { lg: "95%", sm: "90%", xs: "90%"}, mb: { lg: 2, sm: 1, xs: 1} }}>
             <IconButton onClick={togglePicker}><TagFacesIcon sx={{ color: '', '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
             <input type="text" placeholder="Send message" value={input} onChange={handleInputChange} />
             <IconButton type="submit" onClick={sendMessage} disabled={input === "" ? true : false}><SendIcon sx={{ color: '', '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
@@ -218,7 +219,8 @@ function Chat({ user }) {
 }
 
 Chat.propTypes = {
-  user: PropTypes.object
+  user: PropTypes.object,
+  onBack: PropTypes.func
 };
 
 export default Chat;
