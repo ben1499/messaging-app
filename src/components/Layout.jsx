@@ -74,7 +74,7 @@ function Layout() {
       />
       <Box sx={{ height: { lg: "100vh", sm: "10vh", xs: "8vh"}, backgroundColor: "#8C3061", display: "flex", flexDirection: { lg: "column", sm: "row", xs: "row"}, justifyContent: "space-between", alignItems: { lg: "", sm: "center", xs: "center"}, order: { lg: 0, sm: 1, xs: 1} }}>
         <Stack sx={{ px: 2, py: { lg: 2, sm: 0, xs: 0 }}} direction={{ lg: "column", xs: "row" }}>
-          <img className="layout-logo" src={Logo} width={50} alt="" />
+          <Link to="/home"><img className="layout-logo" src={Logo} width={50} alt="" /></Link>
           <Box sx={{ mt: 2, borderTop: '2px solid #4535C1' }} />
           <Tooltip title="Messages">
             <IconButton onClick={handleNavigate("/home")} sx={{ mt: 2, mb: 2 }}><ChatBubbleOutlineIcon sx={{ color: location.pathname === "/home" ? "#3795BD" : "white", '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
