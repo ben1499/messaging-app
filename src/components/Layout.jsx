@@ -4,7 +4,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonImg from "../assets/person-placeholder.jpeg";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axiosInstance from "../config/axios";
 
@@ -89,7 +89,7 @@ function Layout() {
           </Tooltip>
           {/* <Box sx={{ mt: 2, borderTop: '2px solid #4535C1' }} /> */}
           {/* <Box sx={{ mt: 3, mb: 2, ml: { sm: 1, xs: 1}, display: "flex", justifyContent: "center", cursor: "pointer"}}> */}
-            <img className="layout-profile-img" src={profileData?.image ? profileData.image.url : PersonImg} style={{ borderRadius: "48%", objectFit: "cover", width: "47px", height: "47px" }} alt="" />
+            <Link to={`/profile/${profileData?._id}`}><img className="layout-profile-img" src={profileData?.image ? profileData.image.url : PersonImg} style={{ borderRadius: "48%", objectFit: "cover", width: "47px", height: "47px" }} alt="" /></Link>
           {/* </Box> */}
         </Stack>
       </Box>
