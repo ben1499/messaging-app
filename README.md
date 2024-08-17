@@ -1,8 +1,24 @@
-# React + Vite
+# Messaging App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack messaging application built with React and Express. It includes features like user authorization, messaging between users, and user profile customization.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-   **Authorization**: Users can securely sign up, log in, and manage their accounts (JWT Based).
+-   **Messaging**: Users can send messages to other users within the app.
+-   **Profile Customization**: Users can personalize their profiles with custom information and profile pictures.
+
+## Technologies used
+
+-   React
+-   Express (Node.js)
+-   MongoDB
+-   Mongoose
+-   Vite
+-   React Router
+-   Material UI
+-   Cloudinary
+
+## Link
+https://messaging-app-ben1499.netlify.app/
+
