@@ -1,7 +1,7 @@
-import { Typography, Button, TextField, Stack, Box, InputAdornment, IconButton, Snackbar } from "@mui/material";
+import { Typography, TextField, Stack, Box, InputAdornment, IconButton, Snackbar } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import bgImage from "../assets/bg.webp"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { styled } from "@mui/material";
 import { Info, Visibility, VisibilityOff } from "@mui/icons-material";
@@ -33,6 +33,12 @@ function Signup() {
   })
 
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/home");
+    }
+  }, [navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

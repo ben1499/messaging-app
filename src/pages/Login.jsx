@@ -40,6 +40,9 @@ function Login() {
       // To clear the isRedirect state
       navigate(".", { replace: true })
     }
+    if (localStorage.getItem("token")) {
+      navigate("/home");
+    }
   }, [location, navigate]);
 
   const handleModelChange = (e) => {

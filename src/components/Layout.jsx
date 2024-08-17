@@ -41,6 +41,8 @@ function Layout() {
         return;
       }
       if (err.response.status === 401 || err.response.status === 403) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user_id");
         navigate("/login", { state: { isRedirect: true } });
       }
     })
@@ -75,10 +77,10 @@ function Layout() {
           <img className="layout-logo" src={Logo} width={50} alt="" />
           <Box sx={{ mt: 2, borderTop: '2px solid #4535C1' }} />
           <Tooltip title="Messages">
-            <IconButton onClick={handleNavigate("/home")} sx={{ mt: 2, mb: 2 }}><ChatBubbleOutlineIcon sx={{ color: 'white', '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
+            <IconButton onClick={handleNavigate("/home")} sx={{ mt: 2, mb: 2 }}><ChatBubbleOutlineIcon sx={{ color: location.pathname === "/home" ? "#3795BD" : "white", '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
           </Tooltip>
           <Tooltip title="Profile">
-            <IconButton onClick={handleNavigate(`/profile/${profileData?._id}`)}><PersonOutlineIcon sx={{ color: 'white', '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
+            <IconButton onClick={handleNavigate(`/profile/${profileData?._id}`)}><PersonOutlineIcon sx={{ color: location.pathname?.split("/")[2] === profileData?._id ? "#3795BD" : "white", '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
           </Tooltip>
         </Stack>
         <Stack sx={{ px: 2, py: { lg: 2, sm: 0, xs: 0, gap: "8px" }}} alignItems="center" direction={{ lg: "column", sm: "row", xs: "row" }}>
