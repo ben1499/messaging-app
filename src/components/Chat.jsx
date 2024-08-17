@@ -78,6 +78,7 @@ function Chat({ user, onBack }) {
   const [selectedMsg, setSelectedMsg] = useState(null);
   const [isSnackVisible, setSnackVisible] = useState(false);
   const [snackMessage, setSnackMessage] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axiosInstance.get(`${url}/messages/`, {
@@ -113,13 +114,19 @@ function Chat({ user, onBack }) {
 
   const sendMessage = (e) => {
     e.preventDefault();
+    setLoading(true);
     axiosInstance.post(`${url}/messages`, {
       content: input,
       to_user_id: user._id
     }).then(() => {
       setInput("");
       fetchMessages();
-    }).catch((err) => console.log(err));
+    }).catch((err) => {
+      console.log(err)
+      setSnackMessage("Something went wrong. Please try again");
+      setSnackVisible(true);
+    })
+    .finally(() => setLoading(false));
   }
 
   const toggleMsgOptions = (id) => {
@@ -210,7 +217,7 @@ function Chat({ user, onBack }) {
           <ChatInput sx={{ width: { lg: "95%", sm: "90%", xs: "90%"}, mb: { lg: 2, sm: 1, xs: 1} }}>
             <IconButton onClick={togglePicker}><TagFacesIcon sx={{ color: '', '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
             <input type="text" placeholder="Send message" value={input} onChange={handleInputChange} />
-            <IconButton type="submit" onClick={sendMessage} disabled={input === "" ? true : false}><SendIcon sx={{ color: '', '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
+            <IconButton type="submit" onClick={sendMessage} disabled={input === "" || loading ? true : false}><SendIcon sx={{ color: '', '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
           </ChatInput>
         </form>
       </ChatContainer>
