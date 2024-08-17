@@ -180,7 +180,7 @@ function Chat({ user, onBack }) {
         </Box>
       </Box>
       {isPickerOpen ? (
-        <Box sx={{ position: "absolute", top: "22rem", left: "20px" }}>
+        <Box sx={{ position: "absolute", top: { lg: "22rem", sm: "19rem", xs: "17rem"}, left: "20px" }}>
           <Picker
             emojiStyle="native"
             open={isPickerOpen}
