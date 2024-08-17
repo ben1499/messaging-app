@@ -32,7 +32,13 @@ html, body {
 }
 
 
-@media (max-width: 600px) {
+@media (max-width: 1199px) {
+  .layout-logo {
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 500px) {
   .welcome-bg-image {
     display: none;
   }

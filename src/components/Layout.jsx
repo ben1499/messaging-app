@@ -22,9 +22,9 @@ function Layout() {
 
   useEffect(() => {
     if (location.pathname === "/home") {
-      setLayoutGridStyle("90px 450px 1fr");
+      setLayoutGridStyle("80px 450px 1fr");
     } else {
-      setLayoutGridStyle("90px 1fr");
+      setLayoutGridStyle("80px 1fr");
     }
   }, [location])
 

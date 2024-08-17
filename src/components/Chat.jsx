@@ -1,4 +1,4 @@
-import { Box, Typography, IconButton, Card, List, ListItemButton, Snackbar } from "@mui/material";
+import { Box, Typography, IconButton, Card, List, ListItemButton, Snackbar, CircularProgress } from "@mui/material";
 import PersonImg from "../assets/person-placeholder.jpeg";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
@@ -78,16 +78,20 @@ function Chat({ user, onBack }) {
   const [selectedMsg, setSelectedMsg] = useState(null);
   const [isSnackVisible, setSnackVisible] = useState(false);
   const [snackMessage, setSnackMessage] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [chatLoading, setChatLoading] = useState(false);
 
   useEffect(() => {
+    setMessages([]);  
+    setChatLoading(true);
     axiosInstance.get(`${url}/messages/`, {
       params: {
         to_user_id: user._id
       }
     }).then((res) => {
       setMessages(res.data.data);
-    })
+    }).catch((err) => console.log(err))
+    .finally(() => setChatLoading(false));
   }, [url, user]);
 
   const togglePicker = () => {
@@ -108,8 +112,9 @@ function Chat({ user, onBack }) {
           to_user_id: user._id
         }
       }).then((res) => {
-      setMessages(res.data.data);
-    })
+        setMessages(res.data.data);
+      }).catch((err) => console.log(err))
+      .finally(setChatLoading(false));
   }
 
   const sendMessage = (e) => {
@@ -196,30 +201,36 @@ function Chat({ user, onBack }) {
         </Box>
       ) : null}
       <ChatContainer>
-        <Box sx={{ height: "90%", display: "flex", flexDirection: "column", padding: "0 12px", paddingTop: "16px", overflowY: "auto", paddingBottom: "36px" }}>
-          {messages.map((message) => (
-            <Box onMouseLeave={handleMessageHoverLeave} key={message._id} sx={{ position: "relative", alignSelf: message.is_current_user ? "flex-end" : "flex-start", marginBottom: "15px", display: "flex", flexDirection: "column" }}>
-              <MetaInfo sx={{ alignSelf: message.is_current_user ? "flex-end" : "flex-start" }}>{ message.date_formatted}</MetaInfo>
-              <ChatMsg 
-                sx={{ borderTopRightRadius: message.is_current_user ? "0px" : "", borderTopLeftRadius: message.is_current_user ? "" : "0px", backgroundColor: !message.is_current_user ? "#F8EDED" : "#FFEBD4" }}>
-                  <Box sx={{ maxInlineSize: { lg: "450px", sm: "250px", xs: "250px"}, overflowWrap: "break-word" }}>{message.content}</Box>
-                  {message.is_current_user ? <StyledArrowIcon onClick={toggleMsgOptions(message._id)} /> : null }
-              </ChatMsg>
-              {selectedMsg === message._id ? (
-                <List sx={{ position: "absolute", backgroundColor: "#fff", top: "50px", right: 0, width: "160px", zIndex: "100 !important", boxShadow: "1px 1px 1px 1px rgb(0,0,0,0.3)" }}>
-                  <ListItemButton sx={{ fontSize: "14px"}} onClick={deleteMessage(message._id)}>Delete Message</ListItemButton>
-                </List>
-              ) : null}
-            </Box>
-          ))}
-        </Box>
-        <form action="">
-          <ChatInput sx={{ width: { lg: "95%", sm: "90%", xs: "90%"}, mb: { lg: 2, sm: 1, xs: 1} }}>
-            <IconButton onClick={togglePicker}><TagFacesIcon sx={{ color: '', '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
-            <input type="text" placeholder="Send message" value={input} onChange={handleInputChange} />
-            <IconButton type="submit" onClick={sendMessage} disabled={input === "" || loading ? true : false}><SendIcon sx={{ color: '', '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
-          </ChatInput>
-        </form>
+        {chatLoading ? <Box sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <CircularProgress />
+        </Box> : (
+        <>
+          <Box sx={{ height: "90%", display: "flex", flexDirection: "column", padding: "0 12px", paddingTop: "16px", overflowY: "auto", paddingBottom: "36px" }}>
+            {messages.map((message) => (
+              <Box onMouseLeave={handleMessageHoverLeave} key={message._id} sx={{ position: "relative", alignSelf: message.is_current_user ? "flex-end" : "flex-start", marginBottom: "15px", display: "flex", flexDirection: "column" }}>
+                <MetaInfo sx={{ alignSelf: message.is_current_user ? "flex-end" : "flex-start" }}>{ message.date_formatted}</MetaInfo>
+                <ChatMsg 
+                  sx={{ borderTopRightRadius: message.is_current_user ? "0px" : "", borderTopLeftRadius: message.is_current_user ? "" : "0px", backgroundColor: !message.is_current_user ? "#F8EDED" : "#FFEBD4" }}>
+                    <Box sx={{ maxInlineSize: { lg: "450px", sm: "250px", xs: "250px"}, overflowWrap: "break-word" }}>{message.content}</Box>
+                    {message.is_current_user ? <StyledArrowIcon onClick={toggleMsgOptions(message._id)} /> : null }
+                </ChatMsg>
+                {selectedMsg === message._id ? (
+                  <List sx={{ position: "absolute", backgroundColor: "#fff", top: "50px", right: 0, width: "160px", zIndex: "100 !important", boxShadow: "1px 1px 1px 1px rgb(0,0,0,0.3)" }}>
+                    <ListItemButton sx={{ fontSize: "14px"}} onClick={deleteMessage(message._id)}>Delete Message</ListItemButton>
+                  </List>
+                ) : null}
+              </Box>
+            ))}
+          </Box>
+          <form action="">
+            <ChatInput sx={{ width: { lg: "95%", sm: "90%", xs: "90%"}, mb: { lg: 2, sm: 1, xs: 1} }}>
+              <IconButton onClick={togglePicker}><TagFacesIcon sx={{ color: '', '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
+              <input type="text" placeholder="Send message" value={input} onChange={handleInputChange} />
+              <IconButton type="submit" onClick={sendMessage} disabled={input === "" || loading ? true : false}><SendIcon sx={{ color: '', '&:hover': { transform: 'scale(1.1)'} }} /></IconButton>
+            </ChatInput>
+          </form>
+          </>
+        )}
       </ChatContainer>
     </Box>
   )

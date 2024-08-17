@@ -69,7 +69,7 @@ function Home() {
     <>
       <Box sx={{ display: { lg: "block", xs: selectedChat && "none" } }}>
         <Box sx={{ display: "flex", fontSize: "18px", alignItems: "center", gap: "6px", padding: "19.5px 0", px: 2, borderBottom: "1px solid rgb(212 212 216)" }}><ListIcon />Messages</Box>
-        <Box sx={{ height: { lg: "92vh", xs: "80vh"}, overflowY: "auto" }}>
+        <Box sx={{ height: { lg: "91vh", xs: "80vh"}, overflowY: "auto" }}>
           {users.length ? users.map((user) => (
             <StyledChatSelect key={user._id} onClick={openChat(user)} sx={{ backgroundColor: selectedChat?._id === user._id ? "#D1E9F6" : "" }}>
               <Box sx={{ display: "flex", alignItems: "center", gap: "6px"}}>
