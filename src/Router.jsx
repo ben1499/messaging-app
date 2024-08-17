@@ -5,6 +5,7 @@ import Signup from "./pages/Signup";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
+import Error from "./pages/Error";
 
 function Router() {
   const router = createBrowserRouter([
@@ -18,6 +19,7 @@ function Router() {
     },
     {
       path: "/",
+      errorElement: <Error />,
       element: <ProtectedRoute>
         <Layout />
       </ProtectedRoute>,
