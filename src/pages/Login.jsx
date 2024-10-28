@@ -38,7 +38,7 @@ function Login() {
       setSnackMessage("Please login to access account");
       setSnackOpen(true);
       // To clear the isRedirect state
-      navigate(".", { replace: true })
+      return navigate(".", { replace: true })
     }
     if (localStorage.getItem("token")) {
       navigate("/home");
