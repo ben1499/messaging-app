@@ -68,8 +68,8 @@ const ChatInput = styled(Card)(() => ({
   }
 }));
 
+const url = import.meta.env.VITE_API_URL;
 function Chat({ user, onBack }) {
-  const url = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   const [isPickerOpen, setIsPickerOpen] = useState(false);
@@ -92,7 +92,7 @@ function Chat({ user, onBack }) {
       setMessages(res.data.data);
     }).catch((err) => console.log(err))
     .finally(() => setChatLoading(false));
-  }, [url, user]);
+  }, [user._id]);
 
   const togglePicker = () => {
     setIsPickerOpen(!isPickerOpen);

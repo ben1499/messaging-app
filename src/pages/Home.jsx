@@ -27,37 +27,22 @@ const StyledChatSelect = styled(Box)(() => ({
   }
 }));
 
+const url = import.meta.env.VITE_API_URL;
+
 function Home() {
-  const url = import.meta.env.VITE_API_URL;
   const [users, setUsers] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
 
   useEffect(() => {
     axiosInstance.get(`${url}/users`)
     .then((res) => {
-    // const arr = []
-    // for (let i = 0; i < 15; i++) {
-    //   arr.push({
-    //     id: i,
-    //     "first_name": "Jim",
-    //     "last_name": "Hansen",
-    //     "email": "jim@gmail.com",
-    //     "__v": 0
-    //   })
-    // }
-    // setUsers(arr);
       setUsers(res.data.data);
     })
-  }, [url]);
+  }, []);
 
   const openChat = (user) => {
     return () => {
       setSelectedChat(user);
-      axiosInstance.get(`${url}/messages`, {
-        params: {
-          to_user_id: user._id
-        }
-      })
     }
   }
 
