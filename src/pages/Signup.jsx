@@ -156,7 +156,7 @@ function Signup() {
         </Stack>
       </form>
       <Box className="welcome-bg-image">
-        <img style={{height: '99%', width: '100%'}} src={bgImage} alt="" />
+        <img style={{ height: '99%', width: '100%', objectFit: "cover" }} src={bgImage} alt="" />
       </Box>
     </Box>
   )

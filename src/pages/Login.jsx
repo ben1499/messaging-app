@@ -1,7 +1,7 @@
 import { Typography, TextField, Stack, Box, IconButton, InputAdornment } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import bgImage from "../assets/bg.webp"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef  } from "react";
 import axios from "axios";
 import { Info, Visibility, VisibilityOff } from "@mui/icons-material";
 import { styled, Snackbar } from "@mui/material";
@@ -27,11 +27,14 @@ function Login() {
     password: ""
   })
 
+  const formRef = useRef(null);
+
   const [errors, setErrors] = useState([]);
   const [snackOpen, setSnackOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [snackMessage, setSnackMessage] = useState(null);
+  const [triggerDemoLogin, setTriggerDemoLogin] = useState(false);
 
   useEffect(() => {
     if (location.state?.isRedirect) {
@@ -57,7 +60,7 @@ function Login() {
   }
 
   const submitForm = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setErrors([]);
     setLoading(true);
     axios.post(`${url}/users/login`, model)
@@ -77,6 +80,18 @@ function Login() {
       }
     }).finally(() => setLoading(false));
   }
+
+  const loginDemo = () => {
+    setModel({ email: "johndoe@gmail.com", password: "johndoe@gmail.com" });
+    setTriggerDemoLogin(true);
+  }
+
+  useEffect(() => {
+    if (triggerDemoLogin) {
+      submitForm(); 
+      setTriggerDemoLogin(false); 
+    }
+  }, [triggerDemoLogin]);
 
   const handleSnackClose = () => {
     setSnackOpen(false);
@@ -126,11 +141,12 @@ function Login() {
                 </InputAdornment>)
               }}
           />
-          <LoadingButton type="submit" variant="contained" loadingPosition="start" loading={loading}>Login</LoadingButton>
+          <LoadingButton type="submit" ref={formRef} variant="contained" loadingPosition="start" loading={loading}>Login</LoadingButton>
+          <LoadingButton type="button" onClick={loginDemo} variant="contained" loadingPosition="start" loading={loading}>Login with Demo Account</LoadingButton>
         </Stack>
       </form>
       <Box className="welcome-bg-image">
-        <img style={{ height: '99%', width: '100%' }} src={bgImage} alt="" />
+        <img style={{ height: '99%', width: '100%', objectFit: "cover" }} src={bgImage} alt="" />
       </Box>
     </Box>
   )
